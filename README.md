@@ -2,4 +2,4 @@ AI
 ==
 Por ahora compilar con: 
 
-g++ -g -o <Nombre> <Nombre>.cpp
+g++ -g -o File File.cpp
