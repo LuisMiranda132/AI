@@ -1,0 +1,14 @@
+PROGRESO DE IMPLEMENTACION
+
++Ya se hizo el primer boceto de la implementacion de la clase nodo. La clase es
+generica, y supone ciertas cosas:
+   -Hay una implementacion para la clase Action ***O*** En la clase T que
+   representa el estado generico hay una enumeracion llamada actions que
+   describe todas las posibles acciones del problema
+   -init(), is-goal() y succ() estan implementadas en T (init como funcion
+    estatica)
+   -Hay una implementacion de funcion de transicion en T, de manera que f(s,a)
+    devuelva s' donde s es un estado, a una accion y s' el estado resultante
+   -De la misma forma, hay una implementacion de costo en T llamada actionCost
+    con la firma actionCost(s,a), donde s es un estado y a es una accion, y
+    devuelve el costo de ejecutar la accion en ese estado
