@@ -1,21 +1,35 @@
+/** Class 15pluzzle
+* Clase que implementa los estados del problema 15puzzle
+* @param half_up: Entero que representa la parte de arriba del tablero
+* @param half_down: Entero que representa la parte de abajo del tablero
+* @param zero: Posicion del 0 en este momento
+**/
+
 #include <iostream>
 #include <stdio.h>
 #include <cstdlib>
+#include <vector>
 
 using namespace std;
 
+// Mascaras que se usan para filtar las casillas del tablero en la representacion
+// Se usan 4 bits para representar una casilla del tablero
 unsigned int mask[8] = {15,240,3840,61440,983040,15728640,251658240,4026531840};
 
+// Representacion de que posiciones son posibles dependiendo de la posicion del 0
+// Cada bit representa respectivamente:
 // arriba,abajo,izquierda,derecha
 int posZero[16]={5, 7, 7, 6,
 		 13,15,15,14,
 		 13,15,15,14,
 		 9,11,11,10};
 
+// Funcion que ayuda a optener el valor de alguna casilla del tablero
 inline int getpos(int i, int j)
 {
     return ((i&mask[j])>>(j*4));
 }
+// Funcion que ayuda a guardar un valor en alguna casilla del tablero
 inline int setpos(int i, int j, int pos)
 {
     return (i&(4294967295-mask[pos]))|(j<<4*pos);
@@ -28,21 +42,43 @@ public:
 
     unsigned int half_up, half_down, zero;
     
+    /**
+     * Constructor de State
+     * El default es la representacion:
+     * 0  1  2  3
+     * 4  5  6  7
+     * 8  9  10 11
+     * 12 13 14 15
+     * @param up: la mitad de arriba
+     * @param down: la mitad de abajo
+     * @param X: posicion del zero
+     * @return State construido
+     **/
     State(unsigned int up=19088743,
 	  unsigned int down=2309737967,
 	  unsigned int X=0):
 	half_up(up),half_down(down),zero(X){};
     
     bool isGoal( State &goal);
+    vector<State> getSucc();
 
-    void getSucc();
-    State move( int orig, int dest);
+    //////////////////////////////
+    // pendiente	        //
+    // int actionCost(){        //
+    // 	return 1;	        //
+    // }		        //
+    //////////////////////////////
+    
+private:
+
     State down();
     State up();
     State right();
     State left();
+
 };
 
+// Reescritura del operador == para la clase State
 bool operator== (const State &left,const State &right)
 {
 
@@ -50,6 +86,7 @@ bool operator== (const State &left,const State &right)
     
 };
     
+// Reescritura del operador << para la clase State
 ostream& operator<<(ostream& out,const State dummy)
 {
 
@@ -74,59 +111,51 @@ ostream& operator<<(ostream& out,const State dummy)
     	    
 };
 
-// State State::move( int orig, int dest)
-// {
-//     State dummy(this->half_up,this->half_down,this->zero);
-    
-//     // this->half_up => this->half_down
-//     if((orig<8)&&(dest>7)){
-// 	dummy->half_up = setpos(dummy->half_up,getpos)
-//     // this->half_down => this->half_up 
-//     }else if((dest<8)&&(orig>7)){
-
-//     // this->half_up	
-//     }else if((dest<8)&&(orig<8)){
-    
-//     // this->half_down 
-//     }else{
-	
-//     };
-                    
-// };
-
-
-void State::getSucc()
+/**
+ * Calcula todos los posibles estados a los que se le pueden llegar haciendo
+ * movimientos validos
+ * @return vector con los estados 
+ **/
+vector<State> State::getSucc()
 {
-    //derecha
+    vector<State> out;
     int dummy = posZero[this->zero];
 
+    //derecha
     if( (dummy&1) ){
 	State right(this->half_up, this->half_down, this->zero);
 	right.right();
-	cout<<right;
+	out.push_back(right);
+	//cout<<right;
     };
     //izquierda
     if((dummy&2)>>1){
 	State left(this->half_up, this->half_down, this->zero);
 	left.left();
-	cout<<left;
+	out.push_back(left);
+	//cout<<left;
     };
     //abajo
     if((dummy&4)>>2){
 	State down(this->half_up, this->half_down, this->zero);
 	down.down();
-	cout<<down;
+	out.push_back(down);
+	//cout<<down;
     };
     //arriba
     if((dummy&8)>>3){
 	State up(this->half_up, this->half_down, this->zero);
 	up.up();
-	cout<<up;
+	out.push_back(up);
+	//cout<<up;
     };
     
     cout<<"\n\n";    
+    
+    return out;
 };
 
+// Accion de mover el 0 hacia abajo en el estado
 State State::down()
 {
     int posicion = 7 - (this->zero);
@@ -151,6 +180,7 @@ State State::down()
     
 };
 
+// Accion de mover el 0 hacia arriba en el estado
 State State::up()
 {
     int posicion = 7 - (this->zero-8);
@@ -174,6 +204,7 @@ State State::up()
     };
 };
 
+// Accion de mover el 0 hacia la derecha en el estado
 State State::right()
 {
     int posicion;
@@ -192,6 +223,7 @@ State State::right()
     };        
 };
 
+// Accion de mover el 0 hacia la izquierda en el estado
 State State::left()
 {
     int posicion;
@@ -210,6 +242,7 @@ State State::left()
     };        
 };
 
+// main de prueba
 int main( int argc, char *argv[] )
 {
     int* dummy = new int[8];
@@ -233,13 +266,11 @@ int main( int argc, char *argv[] )
             
     cout<<herp<<"\n";
 
-    herp.getSucc();
+    vector<State> laSalida = herp.getSucc();
 
-    herp.down();
-    herp.getSucc();
-
-    herp.right();
-    herp.getSucc();
-
+    for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
+	cout<<*yomama;
+    };
+    
     cout<<"\n\t"<<(herp==derp)<<"\n";
 }
