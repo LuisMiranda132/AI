@@ -6,9 +6,9 @@
 * @param costFromRoot: Coste desde la raiz (g(n))
 **/
 
-#include <stdlib>
-#include <Action.cpp>
+#include <stdlib.h>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -19,7 +19,7 @@ class Node{
   public:
     T state;
     Node* parent;
-    Action action;
+    string action;
     int costFromRoot;
 
     /**
@@ -27,7 +27,7 @@ class Node{
      * @param s: Estado inicial
      * @return Nodo raiz construido
     **/
-    Node(T s) : state(s), parent(NULL), action(NULL), costFromRoot(0){}
+    Node(T s) : state(s), parent(), action(), costFromRoot(0){}
 
     /**
      *Constructor de Nodo intermedio u hoja (make-node)
@@ -37,16 +37,16 @@ class Node{
      *@return Nodo construido. Notese que la clase T debe saber calcular sus
      *costes
     **/
-    Node(Node* n,Action a,T s) : state(s), parent(n), action(a){
-      this.costFromRoot = n->costFromRoot + T::actionCost(s,a)
+    Node(Node* n,string a,T s) : state(s), parent(n), action(a){
+      costFromRoot = n->costFromRoot + T::actionCost(s,a);
     }
 
     /**
      *Extrae la secuencia de acciones que llevan a la solucion
      *@return vector con la secuencia de acciones
     **/
-    vector<Action> extract-solution(){
-      vector<Action> path;
+    vector<string> extract_solution(){
+      vector<string> path;
       Node* n = this;
       while(n->parent != NULL){
         path.insert(path.begin,n->action);
