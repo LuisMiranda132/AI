@@ -49,7 +49,7 @@ class Node{
       vector<string> path;
       Node* n = this;
       while(n->parent != NULL){
-        path.insert(path.begin,n->action);
+        path.push_back(n->action);
         n = n->parent;
       }
       return path;
