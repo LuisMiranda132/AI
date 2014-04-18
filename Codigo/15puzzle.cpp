@@ -8,7 +8,8 @@
 #include <iostream>
 #include <stdio.h>
 #include <cstdlib>
-#include <vector>
+//#include <vector>
+#include "astar.h"
 
 using namespace std;
 
@@ -59,8 +60,27 @@ public:
 	  unsigned int X=0):
 	half_up(up),half_down(down),zero(X){};
     
+    State(int* input){	            
+
+	this->half_up=0;
+	this->half_down=0;
+	
+    	for(int i = 0; i<8; i++){
+	    this->half_up=this->half_up<<4;
+	    input[i] ? this->half_up=this->half_up+input[i] : this->zero=i;
+	    
+	};
+    	for(int i = 8; i<16; i++){
+	    this->half_down=this->half_down<<4;
+	    input[i] ? this->half_down=this->half_down+input[i] : this->zero=i;
+	};
+
+    };
+        
     bool isGoal( State &goal);
     vector<State> getSucc();
+
+    long long int zip();
 
     //////////////////////////////
     // pendiente	        //
@@ -150,7 +170,7 @@ vector<State> State::getSucc()
 	//cout<<up;
     };
     
-    cout<<"\n\n";    
+//    cout<<"\n\n";    
     
     return out;
 };
@@ -242,35 +262,145 @@ State State::left()
     };        
 };
 
+ostream& operator<<(ostream& out,const Node<State> dummy)
+{
+    out << dummy.state;
+    out << "\nCosto: " << dummy.costFromRoot <<"\tH: "<< dummy.heuristic << "\n\n";
+
+    return out;
+    
+};
+
+int matrixH[16][16] =
+{ {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+  {1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4, 4, 3, 4, 5},
+  {2, 1, 0, 1, 3, 2, 1, 2, 4, 3, 2, 3, 5, 4, 3, 4},
+  {3, 2, 1, 0, 4, 3, 2, 1, 5, 4, 3, 2, 6, 5, 4, 3},
+  {1, 2, 3, 4, 0, 1, 2, 3, 1, 2, 3, 4, 2, 3, 4, 5},
+  {2, 1, 2, 3, 1, 0, 1, 2, 2, 1, 2, 3, 3, 2, 3, 4},
+  {3, 2, 1, 2, 2, 1, 0, 1, 3, 2, 1, 2, 4, 3, 2, 3},
+  {4, 3, 2, 1, 3, 2, 1, 0, 4, 3, 2, 1, 5, 4, 3, 2},
+  {2, 3, 4, 5, 1, 2, 3, 4, 0, 1, 2, 3, 1, 2, 3, 4},
+  {3, 2, 3, 4, 2, 1, 2, 3, 1, 0, 1, 2, 2, 1, 2, 3},
+  {4, 3, 2, 3, 3, 2, 1, 2, 2, 1, 0, 1, 3, 2, 1, 2},
+  {5, 4, 3, 2, 4, 3, 2, 1, 3, 2, 1, 0, 4, 3, 2, 1},
+  {3, 4, 5, 6, 2, 3, 4, 5, 1, 2, 3, 4, 0, 1, 2, 3},
+  {4, 3, 4, 5, 3, 2, 3, 4, 2, 1, 2, 3, 1, 0, 1, 2},
+  {5, 4, 3, 4, 4, 3, 2, 3, 3, 2, 1, 2, 2, 1, 0, 1},
+  {6, 5, 4, 3, 5, 4, 3, 2, 4, 3, 2, 1, 3, 2, 1, 0}
+};
+
+int manhattan(State input)
+{
+    return matrixH[((input.half_up&mask[7])>>28)][0]
+	+ matrixH[((input.half_up&mask[6])>>24)][1]
+	+ matrixH[((input.half_up&mask[5])>>20)][2]
+	+ matrixH[((input.half_up&mask[4])>>16)][3]
+	+ matrixH[((input.half_up&mask[3])>>12)][4]
+	+ matrixH[((input.half_up&mask[2])>> 8)][5]
+	+ matrixH[((input.half_up&mask[1])>> 4)][6]
+	+ matrixH[((input.half_up&mask[0])>> 0)][7]
+
+	+ matrixH[((input.half_down&mask[7])>>28)][8]
+	+ matrixH[((input.half_down&mask[6])>>24)][9]
+	+ matrixH[((input.half_down&mask[5])>>20)][10]
+	+ matrixH[((input.half_down&mask[4])>>16)][11]
+	+ matrixH[((input.half_down&mask[3])>>12)][12]
+	+ matrixH[((input.half_down&mask[2])>> 8)][13]
+	+ matrixH[((input.half_down&mask[1])>> 4)][14]
+	+ matrixH[((input.half_down&mask[0])>> 0)][15];
+}
+
+long long int State::zip()
+{
+    long long int dummy = this->half_up;
+    return (dummy<<32)|this->half_down;
+}
+
 // main de prueba
 int main( int argc, char *argv[] )
 {
-    int* dummy = new int[8];
+    int* dummy = new int[16];
 
-    State goal;
+    // State goal;
     
-    unsigned int derpA = 0;
-    unsigned int derpB = 7;
+    // unsigned int derpA = 0;
+    // unsigned int derpB = 7;
     
-    for(int i=7;i>=0;i--){
-    	derpA = derpA << 4;
-    	derpA += i;
-    };
-    for(int i=8;i<16;i++){
-    	derpB = derpB << 4;
-    	derpB += i;
-    };
+    // for(int i=7;i>=0;i--){
+    // 	derpA = derpA << 4;
+    // 	derpA += i;
+    // };
+    // for(int i=8;i<16;i++){
+    // 	derpB = derpB << 4;
+    // 	derpB += i;
+    // };
+
+    dummy[0]=3;
+    dummy[1]=14;
+    dummy[2]=9;
+    dummy[3]=11;
+    dummy[4]=5;
+    dummy[5]=4;
+    dummy[6]=8;
+    dummy[7]=2;
+    dummy[8]=13;
+    dummy[9]=12;
+    dummy[10]=6;
+    dummy[11]=7;
+    dummy[12]=10;
+    dummy[13]=1;
+    dummy[14]=15;
+    dummy[15]=0;
+
+    // 13
+    // dummy[0]=14;
+    // dummy[1]=1;
+    // dummy[2]=9;
+    // dummy[3]=6;
+    // dummy[4]=4;
+    // dummy[5]=8;
+    // dummy[6]=12;
+    // dummy[7]=5;
+    // dummy[8]=7;
+    // dummy[9]=2;
+    // dummy[10]=3;
+    // dummy[11]=0;
+    // dummy[12]=10;
+    // dummy[13]=11;
+    // dummy[14]=13;
+    // dummy[15]=15;
+
       
-    State derp;
+    State derp(dummy);
     State herp;
-            
-    cout<<herp<<"\n";
+    // vector<State> laSalida = herp.getSucc();
+    
+    // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
+    astar<State> news;
+    Node<State>* prueba = news.search(derp, herp,manhattan);
+    vector<State> laSalida = prueba->extract_solution();
+	
+    // };
 
-    vector<State> laSalida = herp.getSucc();
+//    Node<State>* prueba = new Node<State>(derp,0);
+    
+//    cout<<*prueba<< "\nManhattan: "<< manhattan(prueba->state)<<"\n";    
+    
+    // Node<State> prueba(derp);
+    
+    // cout << prueba;
+                
+    //cout<<herp<<"\nHERP\n";
 
+    // vector<State> laSalida = herp.getSucc();
+
+    int wut = 0;
+    
     for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
-	cout<<*yomama;
+	
+    	cout<<"\n\n"<<++wut<<"\n\n"<<*yomama;
     };
     
-    cout<<"\n\t"<<(herp==derp)<<"\n";
+    // cout<<"\n\t"<<(herp==derp)<<"\n";
 }
