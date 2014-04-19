@@ -2,4 +2,4 @@ AI
 ==
 Por ahora compilar con: 
 
-g++ -g -o File File.cpp
+g++ -g -MMD -std=c++0x -o 15puzzle 15puzzle.cpp
