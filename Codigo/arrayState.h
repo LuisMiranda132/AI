@@ -13,13 +13,14 @@ class ArrayState{
 
   public:
     vector<int> boardState;
+    string action;
 
     /**
      * Constructor de estado (init())
      * @param state: Estado inicial
      * @return estado construido
     **/
-    ArrayState(vector<int> state) : boardState(state){}
+    ArrayState(vector<int> state, string act) : boardState(state), action(act){}
 
     /**
      * Verifica si el estado es un estado goal
@@ -49,7 +50,7 @@ class ArrayState{
        int temp = up[currentZero-4];
        up[currentZero-4] = 0;
        up[currentZero] = temp;
-       ArrayState upRes(up);
+       ArrayState upRes(up,"UP");
        res.push_back(upRes);
      }
  
@@ -58,7 +59,7 @@ class ArrayState{
        int temp = down[currentZero+4];  
        down[currentZero+4] = 0;
        down[currentZero] = temp;
-       ArrayState downRes(down);
+       ArrayState downRes(down,"DOWN");
        res.push_back(downRes);
      }
 
@@ -68,7 +69,7 @@ class ArrayState{
        int temp = left[currentZero-1];
        left[currentZero-1] = 0;
        left[currentZero] = temp;
-       ArrayState leftRes(left);
+       ArrayState leftRes(left,"LEFT");
        res.push_back(leftRes);
      }
 
@@ -78,7 +79,7 @@ class ArrayState{
        int temp = right[currentZero+1];
        right[currentZero+1] = 0;
        right[currentZero] = temp;
-       ArrayState rightRes(right);
+       ArrayState rightRes(right,"RIGHT");
        res.push_back(rightRes);
      }
 
