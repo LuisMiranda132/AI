@@ -45,10 +45,18 @@ array< array<int,16>,16> dists = {dist0,dist1,dist2,dist3,dist4,dist5,dist6,dist
  *@return: Valor de la heuristica
 **/
 int manhattan(vector<int> pat){
-  int res = 0;
-  int curTarget = 0;
-  for(int x = 0;x<16;++x){
-    res += (dists[x])[pat[x]];
-  } 
-  return res;
+  // int res = 0;
+  // int curTarget = 0;
+  // for(int x = 0;x<16;++x){
+  //   res += (dists[x])[pat[x]];
+  // } 
+  // return res;
+
+    return (dists[0])[pat[0]]+(dists[1])[pat[1]]+(dists[2])[pat[2]]
+	+(dists[3])[pat[3]]+(dists[4])[pat[4]]+(dists[5])[pat[5]]
+	+(dists[6])[pat[6]]+(dists[7])[pat[7]]+(dists[8])[pat[8]]
+	+(dists[9])[pat[9]]+(dists[10])[pat[10]]+(dists[11])[pat[11]]
+	+(dists[12])[pat[12]]+(dists[13])[pat[13]]+(dists[14])[pat[14]]
+	+(dists[15])[pat[15]];
+    
 }

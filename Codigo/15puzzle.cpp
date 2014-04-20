@@ -10,6 +10,7 @@
 #include <cstdlib>
 //#include <vector>
 #include "astar.h"
+#include "patternGenerator.h"
 
 using namespace std;
 
@@ -71,6 +72,23 @@ public:
 	    
 	};
     	for(int i = 8; i<16; i++){
+	    this->half_down=this->half_down<<4;
+	    input[i] ? this->half_down=this->half_down+input[i] : this->zero=i;
+	};
+
+    };
+
+    State(vector<int> input){	            
+	this->half_up=0;
+	this->half_down=0;
+	
+    	for(vector<int>::size_type i=0; i!=8; i++){
+	    this->half_up=this->half_up<<4;
+	    input[i] ? this->half_up=this->half_up+input[i] : this->zero=i;
+	    
+	};
+
+    	for(vector<int>::size_type i=8; i!=16; i++){
 	    this->half_down=this->half_down<<4;
 	    input[i] ? this->half_down=this->half_down+input[i] : this->zero=i;
 	};
@@ -321,7 +339,7 @@ long long int State::zip()
 int main( int argc, char *argv[] )
 {
     int* dummy = new int[16];
-
+        
     // State goal;
     
     // unsigned int derpA = 0;
@@ -374,12 +392,18 @@ int main( int argc, char *argv[] )
       
     State derp(dummy);
     State herp;
+
+    PatternGenerator<State> shiabe;
+    
+    shiabe.generate();
+    
     // vector<State> laSalida = herp.getSucc();
     
     // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
-    astar<State> news;
-    Node<State>* prueba = news.search(derp, herp,manhattan);
-    vector<State> laSalida = prueba->extract_solution();
+
+    // // astar<State> news;
+    // // Node<State>* prueba = news.search(derp, herp,manhattan);
+    // // vector<State> laSalida = prueba->extract_solution();
 	
     // };
 
@@ -395,12 +419,11 @@ int main( int argc, char *argv[] )
 
     // vector<State> laSalida = herp.getSucc();
 
-    int wut = 0;
-    
-    for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
+    // // int wut = 0;    
+    // // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
 	
-    	cout<<"\n\n"<<++wut<<"\n\n"<<*yomama;
-    };
+    // // 	cout<<"\n\n"<<++wut<<"\n\n"<<*yomama;
+    // // };
     
     // cout<<"\n\t"<<(herp==derp)<<"\n";
 }
