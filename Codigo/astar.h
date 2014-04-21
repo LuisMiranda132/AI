@@ -54,9 +54,8 @@ public:
 	    nodos_expandidos++;
 
 	    if(node->state==end){
-		cout<<"Lo lograste perrito, nodos expandidos: "<<nodos_expandidos<<", Pasos para la solucion: "<<node->costFromRoot<<"\n";
+		cout<<"Nodos expandidos: "<<nodos_expandidos<<", Pasos para la solucion: "<<node->costFromRoot<<"\n";
 		return node;
-		
 	    }
 
 	    succ = node->state.getSucc();
