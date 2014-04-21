@@ -22,10 +22,10 @@
 template<class T> class IDA_star
 {
 
+typedef pair<vector<T*>, int> pairPlan;
+
 public:
 
-    T goal;
-    vector<T> succ;
     unsigned int nodos_generados = 0;
 
     /**
@@ -34,35 +34,33 @@ public:
      *@param t: Valor inicial de heuristica
      *return par <plan,t> resultante
     **/
-    Node<T>* bounded_DFS(Node<T>* n){
+    pairPlan* bounded_DFS(Node<T>* n, int t){
       //Si el f(n) es mayor a la heuristica inicial, no vale la pena seguir buscando
       //mas profundamente
-      if(n->costSum > n->heuristic){
-        return n;
+      if(n->costFromRoot + n->heuristic > t){
+        return new pairPlan(*(new vector<T*>),n->costFromRoot + n->heuristic);
       }
 
       //Si el estado actual es goal, retornar la solucion de ese estado
-      if(n->state == goal){
-        n->nullPlan = false;
-        n->sumCost = n->costFromRoot;
-        return n;
+      if(n->state->is_goal()){
+        return new pairPlan(n->extract_solution(),n->costFromRoot);
       }
 
       //Se consiguen los sucesores y se marca el movimiento de retorno
       int newT = MAX;
-      succ = n->state.getSucc();
+      vector<T*> succs(n->state->succ());
 
       //Por cada sucesor que no sea el de retorno, se hace bounded_DFS
-      for(int i=0;i<succ.size();++i){
-        Node<T>* m = new Node<T>(n, succ[i]);
+      for(int i=0;i<succs.size();++i){
+        Node<T>* m = new Node<T>(n, succs[i]);
         ++nodos_generados;
-        m = bounded_DFS(m);
-        if(!m->nullPlan) return m;
-        newT = min(newT,m->sumCost);
+        pairPlan* temp = bounded_DFS(m,t);
+        if(temp->first.size() != 0) return temp;
+        delete(m);
+        newT = min(newT,temp->second);
       } 
 
-      n->sumCost = newT;
-      return n;
+      return new pairPlan(*(new vector<T*>),newT);
     }
 
     /**
@@ -70,22 +68,18 @@ public:
      *@param initial: estado inicial
      *return par <plan,t> final
     **/
-    Node<T>* search(T sta, T end, int (*h)(T input)){
+    pairPlan* search(T* sta, int (*h)(T* input)){
       //Nodo inicial y su heuristica
-      goal = end;
-      Node<T>* inicio = new Node<T>(sta,(*h) sta);
+      Node<T>* inicio = new Node<T>(sta,(*h)(sta));
       ++nodos_generados;
-
-      Node<T>* res = inicio;
-      res->costSum = res->heuristic;
-      res->nullPlan = true;
+      
+      pairPlan* planCota = new pairPlan(*(new vector<T*>),inicio->heuristic);
 
       //Hacer bounded_DFS hasta encontrar la solucion o llegar a un callejon sin
       //salida
-      while(res->costSum < MAX && res->nullPlan){
-        res = bounded_DFS(res);
+      while(planCota->second < MAX && planCota->first.size() == 0){
+        planCota = bounded_DFS(inicio,planCota->second);
       }
-      return res;
+      return planCota;
     }
-
-
+};

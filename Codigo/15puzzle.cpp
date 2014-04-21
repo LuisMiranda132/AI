@@ -11,6 +11,7 @@
 //#include <vector>
 #include "astar.h"
 #include "IDA_star.h"
+#include "manhattan.h"
 //#include "patternGenerator.h"
 
 using namespace std;
@@ -102,11 +103,10 @@ public:
     long long int zip();
 
     //////////////////////////////
-    // pendiente	        //
-    // int actionCost(){        //
-    // 	return 1;	        //
-    // }		        //
-    //////////////////////////////
+    // pendiente        
+    int actionCost(){
+      return 1;
+    }
     
 private:
 
@@ -339,7 +339,7 @@ long long int State::zip()
 // main de prueba
 int main( int argc, char *argv[] )
 {
-    int* dummy = new int[16];
+    array<int,16> dummy;
     int init;
 
     while(scanf("%d",&init) != EOF){
@@ -350,12 +350,13 @@ int main( int argc, char *argv[] )
         dummy[i] = init;
       }
 
-      State derp(dummy);
+      ArrayState derp(&dummy,"INIT");
       State herp;
 
-      IDA_star<State> news;
-      Node<State>* prueba = news.search(derp, herp,manhattan);
-      vector<State> laSalida = prueba->extract_solution();
+      IDA_star<ArrayState> news;
+      pair<vector<ArrayState*>, int>* prueba = news.search(&derp,manhattan);
+
+      printf("%d\n",prueba->first.size());
     }
 	
     // int wut = 0;    

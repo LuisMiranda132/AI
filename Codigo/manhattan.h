@@ -19,6 +19,7 @@
 #include <set>
 #include <complex>
 #include <list>
+#include "arrayState.h"
 
 using namespace std;
 
@@ -44,13 +45,15 @@ array< array<int,16>,16> dists = {dist0,dist1,dist2,dist3,dist4,dist5,dist6,dist
  *@param pat: Vector de enteros que representa un estado del tablero
  *@return: Valor de la heuristica
 **/
-int manhattan(vector<int> pat){
+int manhattan(ArrayState *pate){
   // int res = 0;
   // int curTarget = 0;
   // for(int x = 0;x<16;++x){
   //   res += (dists[x])[pat[x]];
   // } 
   // return res;
+
+    array<int,16> pat(pate->boardState);
 
     return (dists[0])[pat[0]]+(dists[1])[pat[1]]+(dists[2])[pat[2]]
 	+(dists[3])[pat[3]]+(dists[4])[pat[4]]+(dists[5])[pat[5]]

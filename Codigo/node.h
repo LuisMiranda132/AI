@@ -16,22 +16,20 @@ using namespace std;
 template<class T> class Node{
 
   public:
-    T state;
+    T* state;
     Node* parent;
     string action;
     int costFromRoot;
     int heuristic;
-    bool nullPlan;
-    int costSum;
     
     /**
      * Constructor de Nodo raiz (make-root-node)
      * @param s: Estado inicial
      * @return Nodo raiz construido
     **/
-Node(T s, int h) : state(s), parent(), action(), costFromRoot(0), heuristic(h){}
+Node(T* s, int h) : state(s), parent(), action(), costFromRoot(0), heuristic(h){}
 
-Node(T s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heuristic(h){}
+Node(T* s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heuristic(h){}
     /**
      *Constructor de Nodo intermedio u hoja (make-node)
      *@param n: Apuntador al padre del nodo
@@ -43,8 +41,8 @@ Node(T s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heurist
     /* Node(Node* n,string a,T s) : state(s), parent(n), action(a){ */
     /*   costFromRoot = n->costFromRoot + T::actionCost(s,a); */
     /* } */
-    Node(Node* n,T s) : state(s), parent(n), action(){
-	costFromRoot = n->costFromRoot + T::actionCost(s, this);
+    Node(Node* n,T* s) : state(s), parent(n), action(){
+	costFromRoot = n->costFromRoot + s->actionCost();
     }
 
 
@@ -61,8 +59,8 @@ Node(T s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heurist
     /*   } */
     /*   return path; */
     /* } */
-    vector<T> extract_solution(){
-      vector<T> path;
+    vector<T*> extract_solution(){
+      vector<T*> path;
       Node* n = this;
       while(n->parent != NULL){
 	  /* path.push_back(n->action); */
