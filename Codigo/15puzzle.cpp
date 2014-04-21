@@ -340,20 +340,6 @@ int main( int argc, char *argv[] )
 {
     int* dummy = new int[16];
         
-    // State goal;
-    
-    // unsigned int derpA = 0;
-    // unsigned int derpB = 7;
-    
-    // for(int i=7;i>=0;i--){
-    // 	derpA = derpA << 4;
-    // 	derpA += i;
-    // };
-    // for(int i=8;i<16;i++){
-    // 	derpB = derpB << 4;
-    // 	derpB += i;
-    // };
-
     dummy[0]=3;
     dummy[1]=14;
     dummy[2]=9;
@@ -393,37 +379,14 @@ int main( int argc, char *argv[] )
     State derp(dummy);
     State herp;
 
-    PatternGenerator<State> shiabe;
-    
-    shiabe.generate();
-    
-    // vector<State> laSalida = herp.getSucc();
-    
+    astar<State> news;
+    Node<State>* prueba = news.search(derp, herp,manhattan);
+    vector<State> laSalida = prueba->extract_solution();
+	
+    // int wut = 0;    
     // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
-
-    // // astar<State> news;
-    // // Node<State>* prueba = news.search(derp, herp,manhattan);
-    // // vector<State> laSalida = prueba->extract_solution();
 	
+    // 	cout<<"\n\n"<<++wut<<"\n\n"<<*yomama;
     // };
-
-//    Node<State>* prueba = new Node<State>(derp,0);
     
-//    cout<<*prueba<< "\nManhattan: "<< manhattan(prueba->state)<<"\n";    
-    
-    // Node<State> prueba(derp);
-    
-    // cout << prueba;
-                
-    //cout<<herp<<"\nHERP\n";
-
-    // vector<State> laSalida = herp.getSucc();
-
-    // // int wut = 0;    
-    // // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
-	
-    // // 	cout<<"\n\n"<<++wut<<"\n\n"<<*yomama;
-    // // };
-    
-    // cout<<"\n\t"<<(herp==derp)<<"\n";
 }
