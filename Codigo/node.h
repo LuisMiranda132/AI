@@ -21,6 +21,8 @@ template<class T> class Node{
     string action;
     int costFromRoot;
     int heuristic;
+    bool nullPlan;
+    int costSum;
     
     /**
      * Constructor de Nodo raiz (make-root-node)

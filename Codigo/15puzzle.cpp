@@ -1,4 +1,4 @@
-/** Class 15pluzzle
+/** Class 15puzzle
 * Clase que implementa los estados del problema 15puzzle
 * @param half_up: Entero que representa la parte de arriba del tablero
 * @param half_down: Entero que representa la parte de abajo del tablero
@@ -10,7 +10,8 @@
 #include <cstdlib>
 //#include <vector>
 #include "astar.h"
-#include "patternGenerator.h"
+#include "IDA_star.h"
+//#include "patternGenerator.h"
 
 using namespace std;
 
@@ -352,7 +353,7 @@ int main( int argc, char *argv[] )
       State derp(dummy);
       State herp;
 
-      astar<State> news;
+      IDA_star<State> news;
       Node<State>* prueba = news.search(derp, herp,manhattan);
       vector<State> laSalida = prueba->extract_solution();
     }
