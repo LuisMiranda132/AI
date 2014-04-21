@@ -339,49 +339,23 @@ long long int State::zip()
 int main( int argc, char *argv[] )
 {
     int* dummy = new int[16];
-        
-    dummy[0]=3;
-    dummy[1]=14;
-    dummy[2]=9;
-    dummy[3]=11;
-    dummy[4]=5;
-    dummy[5]=4;
-    dummy[6]=8;
-    dummy[7]=2;
-    dummy[8]=13;
-    dummy[9]=12;
-    dummy[10]=6;
-    dummy[11]=7;
-    dummy[12]=10;
-    dummy[13]=1;
-    dummy[14]=15;
-    dummy[15]=0;
+    int init;
 
-    // 13
-    // dummy[0]=14;
-    // dummy[1]=1;
-    // dummy[2]=9;
-    // dummy[3]=6;
-    // dummy[4]=4;
-    // dummy[5]=8;
-    // dummy[6]=12;
-    // dummy[7]=5;
-    // dummy[8]=7;
-    // dummy[9]=2;
-    // dummy[10]=3;
-    // dummy[11]=0;
-    // dummy[12]=10;
-    // dummy[13]=11;
-    // dummy[14]=13;
-    // dummy[15]=15;
+    while(scanf("%d",&init) != EOF){
+      dummy[0] = init;
 
-      
-    State derp(dummy);
-    State herp;
+      for(int i=1;i<16;++i){
+        scanf("%d",&init);
+        dummy[i] = init;
+      }
 
-    astar<State> news;
-    Node<State>* prueba = news.search(derp, herp,manhattan);
-    vector<State> laSalida = prueba->extract_solution();
+      State derp(dummy);
+      State herp;
+
+      astar<State> news;
+      Node<State>* prueba = news.search(derp, herp,manhattan);
+      vector<State> laSalida = prueba->extract_solution();
+    }
 	
     // int wut = 0;    
     // for(vector<State>::iterator yomama=laSalida.begin();yomama!=laSalida.end();++yomama){
