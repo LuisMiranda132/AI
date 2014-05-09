@@ -16,20 +16,19 @@ using namespace std;
 template<class T> class Node{
 
   public:
-    T* state;
+    T state;
     Node* parent;
-    string action;
-    int costFromRoot;
-    int heuristic;
+    signed char costFromRoot;
+    signed char heuristic;
     
     /**
      * Constructor de Nodo raiz (make-root-node)
      * @param s: Estado inicial
      * @return Nodo raiz construido
     **/
-Node(T* s, int h) : state(s), parent(), action(), costFromRoot(0), heuristic(h){}
+    Node(T s, signed char h) : state(s), parent(), costFromRoot(0), heuristic(h){}
 
-Node(T* s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heuristic(h){}
+    Node(T s, signed char c, signed char h) : state(s), parent(), costFromRoot(c), heuristic(h){}
     /**
      *Constructor de Nodo intermedio u hoja (make-node)
      *@param n: Apuntador al padre del nodo
@@ -41,8 +40,12 @@ Node(T* s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heuris
     /* Node(Node* n,string a,T s) : state(s), parent(n), action(a){ */
     /*   costFromRoot = n->costFromRoot + T::actionCost(s,a); */
     /* } */
-    Node(Node* n,T* s) : state(s), parent(n), action(){
-	costFromRoot = n->costFromRoot + s->actionCost();
+    Node(Node* n,T s) : state(s), parent(n){
+	costFromRoot = n->costFromRoot + 1;
+    }
+
+    Node(Node* n,T s, signed char h) : state(s), parent(n), heuristic(h){
+        costFromRoot = n->costFromRoot + 1;
     }
 
 
@@ -50,22 +53,15 @@ Node(T* s, int c, int h) : state(s), parent(), action(), costFromRoot(c), heuris
      *Extrae la secuencia de acciones que llevan a la solucion
      *@return vector con la secuencia de acciones
     **/
-    /* vector<string> extract_solution(){ */
-    /*   vector<string> path; */
-    /*   Node* n = this; */
-    /*   while(n->parent != NULL){ */
-    /*     path.insert(path.begin,n->action); */
-    /*     n = n->parent; */
-    /*   } */
-    /*   return path; */
-    /* } */
-    vector<T*> extract_solution(){
-      vector<T*> path;
+    vector<T> extract_solution(){
+      vector<T> path;
       Node* n = this;
       while(n->parent != NULL){
-	  /* path.push_back(n->action); */
 	  path.push_back(n->state);
 	  n = n->parent;
+      }
+      if(path.size() == 0){
+        path.push_back(n->state);
       }
       return path;
     }
